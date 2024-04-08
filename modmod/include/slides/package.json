@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "dependencies": {
+    "@slidev/cli": "^0.48",
+    "@slidev/theme-default": "*",
+    "@slidev/theme-seriph": "*",
+    "slidev-theme-teach-rs": "0.0.1"
+  }
+}
