@@ -1,7 +1,17 @@
 fn main() {
     let input = [23, 82, 16, 45, 21, 94, 12, 34];
 
-    // TODO
+    let mut largest = input[0];
+    let mut smallest = input[0];
 
-    println!("{} is largest and {} is smallest");
+    for &item in input.iter() {
+        if item > largest {
+            largest = item;
+        }
+        if item < smallest {
+            smallest = item;
+        }
+    }
+
+    println!("{} is largest and {} is smallest", largest, smallest);
 }
