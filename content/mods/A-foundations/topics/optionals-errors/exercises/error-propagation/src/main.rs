@@ -18,16 +18,25 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Lines};
 
 //change this into:
-//fn read_lines(filename: &str) -> Result<Lines<BufReader<File>>, io::Error> {
-fn read_lines(filename: &str) -> Lines<BufReader<File>> {
-    let file = File::open(filename).unwrap(); // this can easily fail
-    BufReader::new(file).lines()
+fn read_lines(filename: &str) -> Result<Lines<BufReader<File>>, io::Error> {
+    let result = File::open(filename); // this can easily fail
+    if let Err(e) = result {
+        return Result::Err(e);
+    }
+
+    let file = result.unwrap();
+    Result::Ok(BufReader::new(file).lines())
 }
 
 //change this into:
-//fn count_bytes_and_lines(filename: &str) -> Result<(usize, usize, usize), io::Error> {
-fn count_bytes_and_lines(filename: &str) -> (usize, usize, usize) {
-    let lines = read_lines(filename);
+fn count_bytes_and_lines(filename: &str) -> Result<(usize, usize, usize), io::Error> {
+    let result = read_lines(filename);
+    if let Err(e) = result {
+        return Result::Err(e);
+    }
+
+    let lines = result.unwrap();
+
     let mut line_count = 0;
     let mut word_count = 0;
     let mut byte_count = 0;
@@ -38,13 +47,19 @@ fn count_bytes_and_lines(filename: &str) -> (usize, usize, usize) {
         byte_count += text.len();
     }
 
-    (line_count, word_count, byte_count)
+    Result::Ok((line_count, word_count, byte_count))
 }
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let filename = &args[1];
 
-    let (lines, words, bytes) = count_bytes_and_lines(filename);
+    let result = count_bytes_and_lines(filename);
+    if let Err(e) = result {
+        eprintln!("Error: {:?}", e);
+        return;
+    }
+
+    let (lines, words, bytes) = result.unwrap();
     println!("{filename}: {lines} lines, {words} words, {bytes} bytes");
 }
