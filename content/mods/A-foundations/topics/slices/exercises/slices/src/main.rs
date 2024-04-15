@@ -4,48 +4,51 @@
 //
 // 2. Finish the implementation of the function merge_sort
 //
-// 3. EXTRA: try changing the type from i32 into String everywhere; does your program still compile? What changes are necessary?
+// 3. EXTRA: try changing the type from String into String everywhere; does your program still compile? What changes are necessary?
 
 /// Merge two array slices (that have to be sorted) into a vector
-fn merge(a: &[i32], b: &[i32]) -> Vec<i32> {
+fn merge(a: &[String], b: &[String]) -> Vec<String> {
     let mut dest = Vec::new();
 
-    let a_idx = 0;
-    let b_idx = 0;
+    let mut a_idx = 0;
+    let mut b_idx = 0;
 
     while a_idx < a.len() && b_idx < b.len() {
         if a[a_idx] <= b[b_idx] {
-            dest.push(a[a_idx]);
+            dest.push((a[a_idx].clone()).to_string());
             a_idx += 1
         } else {
-            dest.push(b[b_idx]);
+            dest.push((b[b_idx].clone()).to_string());
             b_idx += 1
         }
     }
 
-    for elem in a[a_idx..] {
-        dest.push(elem)
+    for elem in &a[a_idx..] {
+        dest.push((*elem.clone()).to_string())
     }
-    for elem in b[b_idx..] {
-        dest.push(elem)
+    for elem in &b[b_idx..] {
+        dest.push((*elem.clone()).to_string())
     }
 
     dest
 }
 
 /// Take an array slice, and sort into a freshly constructed vector using the above function
-fn merge_sort(data: &[i32]) -> Vec<i32> {
+fn merge_sort(data: &[String]) -> Vec<String> {
     if data.len() > 1 {
-        // implement this
-        todo!()
+        let m = data.len() / 2;
+        let left = merge_sort(&data[..m]);
+        let right = merge_sort(&data[m..]);
+        merge(&left, &right)
     } else {
         data.to_vec()
     }
 }
 
-/// Read a bunch of numbers from standard input into a Vec<i32>.
-fn read_numbers() -> Vec<i32> {
+/// Read a bunch of numbers from standard input into a Vec<String>.
+fn read_numbers() -> Vec<String> {
     use std::io;
+    println!("Please enter some numbers, one or more per line separated by spaces. End with Ctrl-D (Linux) or Ctrl-Z (Windows).");
     let mut result = Vec::new();
     for line in io::stdin().lines().flatten() {
         for word in line.split_whitespace() {
